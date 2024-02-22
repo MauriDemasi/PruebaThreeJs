@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Three.js Dice</title>
+    <style>
+        body {
+            margin: 0;
+        }
+
+        canvas {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script type="importmap">
+        {
+          "imports": {
+            "three": "https://unpkg.com/three@<version>/build/three.module.js",
+            "three/addons/": "https://unpkg.com/three@<version>/examples/jsm/"
+          }
+        }
+      </script>
+    <script>
+        // Creamos una escena
+        const scene = new THREE.Scene();
+
+        // Creamos una cámara
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.z = 5;
+
+        // Creamos un renderizador
+        const renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        // Añadimos una luz
+        const light = new THREE.PointLight(0xFFFFFF);
+        light.position.set(10, 10, 10);
+        scene.add(light);
+
+        // Cargamos las texturas de las caras del dado
+        const textureLoader = new THREE.TextureLoader();
+        const textures = [
+            textureLoader.load('https://th.bing.com/th/id/R.32b6fc12260c96f711150637f382841f?rik=Kpqh3wwHrBlvYQ&pid=ImgRaw&r=0'),
+            textureLoader.load('https://th.bing.com/th/id/OIP.fBJ2R5Y0m_tQXUxdc0icPQHaKd?rs=1&pid=ImgDetMain'),
+            textureLoader.load('https://th.bing.com/th/id/OIP.25vSXGJsvi1u3JIjcfvfNQHaEo?rs=1&pid=ImgDetMain'),
+            textureLoader.load('https://th.bing.com/th/id/OIP.3uS4_Y8kQmqSc9t9UsCTtAHaEH?rs=1&pid=ImgDetMain'),
+            textureLoader.load('https://th.bing.com/th/id/OIP.uhxfs44Jrip6GoKECxLHyQHaFO?rs=1&pid=ImgDetMain'),
+            textureLoader.load('https://th.bing.com/th/id/OIP.UtLd9zg_oUUTB6I65TuMcQHaHa?rs=1&pid=ImgDetMain')
+        ];
+
+        // Creamos el dado
+        const geometry = new THREE.BoxGeometry();
+        const material = textures.map(texture => new THREE.MeshBasicMaterial({ map: texture }));
+        const dice = new THREE.Mesh(geometry, material);
+        scene.add(dice);
+
+        // Animamos el dado
+        function animate() {
+            requestAnimationFrame(animate);
+
+            dice.rotation.x += 0.01;
+            dice.rotation.y += 0.01;
+
+            renderer.render(scene, camera);
+        }
+        animate();
+    </script>
+</body>
+
+</html>
